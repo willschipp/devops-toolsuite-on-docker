@@ -1,0 +1,22 @@
+version: '2'
+services:
+  postgres:
+    image: postgres
+    container_name: "postgres"
+    volumes:
+     - data-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pguser
+      POSTGRES_DB: pgdb
+  mongo:
+    image: mongo:3.0
+    container_name: "mongodb"
+    volumes:
+     - data-volume:/data/db
+    command: "--smallfiles"
+    environment:
+     - MONGO_DATA_DIR=/data/db
+
+volumes:
+  data-volume:
