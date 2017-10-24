@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  drone-server:
+    image: drone/drone:0.5
+    ports:
+      - 8080:8000
+    volumes:
+      - ./drone:/var/lib/drone/
+    restart: always
+    environment:
+      - DRONE_GITLAB=true
+      - DRONE_GITLAB_CLIENT=12a56585f1c80989570e9944c417bc890db54d3daec44998471210aa0ffad48a
+      - DRONE_GITLAB_SECRET=138010a5765c0a9ccd62468918d9e2c25c145a15bc76e35035ca8f5b130e2f9a
+      - DRONE_GITLAB_URL=http://192.168.1.222:8000
+      - DRONE_SECRET=averylonglongkey
+
+  drone-agent:
+    image: drone/drone:0.5
+    command: agent
+    restart: always
+    depends_on: [ drone-server ]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=ws://192.168.1.222:8000/ws/broker
+      - DRONE_SECRET=averylonglongkey

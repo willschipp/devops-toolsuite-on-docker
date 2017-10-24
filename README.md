@@ -19,3 +19,4 @@ taiga | project management
 jenkins | CI
 rocket.chat | chat
 sonatype nexus | CD
+minio | Binaries

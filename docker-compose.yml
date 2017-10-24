@@ -1,0 +1,76 @@
+version: '2'
+services:
+  postgres:
+    image: postgres
+    container_name: "postgres"
+    volumes:
+     - postgres-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: taiga
+
+      POSTGRES_DB: taiga
+    restart: always
+  db:
+    image: mongo:3.0
+    container_name: "mongo"
+    volumes:
+     - mongo-volume:/data/db
+    command: "--smallfiles"
+    environment:
+     - MONGO_DATA_DIR=/data/db
+    restart: always
+  rocket:
+    image: rocket.chat
+    container_name: "rocket"
+    hostname: rocket
+    depends_on:
+      - db
+    links:
+      - db:db
+    restart: always
+  nexus:
+    image: sonatype/nexus3
+    container_name: "nexus"
+    hostname: nexus
+    volumes:
+     - nexus-volume:/nexus-data
+    restart: always
+  minio:
+    image: minio/minio
+    container_name: "minio"
+    hostname: minio
+    volumes:
+     - minio-volume:/data
+    environment:
+     - MINIO_ACCESS_KEY=somelonginitialkey
+     - MINIO_SECRET_KEY=somelongsecretkey
+    command: server /data
+    restart: always
+  gogs:
+    image: gogs/gogs
+    container_name: "gogs"
+    volumes:
+      - gogs-volume:/data
+  proxy:
+    build: ./proxy
+    image: nginx-proxy
+    container_name: "proxy"
+    hostname: proxy
+    ports:
+      - 80:80
+    depends_on:
+      - rocket
+      - nexus
+      - minio
+      - gogs
+    restart: always
+
+networks:
+  default:
+
+volumes:
+  mongo-volume:
+  nexus-volume:
+  minio-volume:
+  postgres-volume:
+  gogs-volume:

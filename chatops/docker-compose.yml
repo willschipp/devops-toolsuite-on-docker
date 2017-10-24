@@ -1,0 +1,13 @@
+version: '3'
+services:
+  rocket:
+    image: rocket.chat
+    container_name: "rocket"
+    hostname: rocket
+    links:
+      - mongodb
+
+networks:
+  default:
+     external:
+       name: cd_new

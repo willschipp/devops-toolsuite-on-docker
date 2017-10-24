@@ -9,14 +9,17 @@ services:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pguser
       POSTGRES_DB: pgdb
-  mongo:
+  db:
     image: mongo:3.0
-    container_name: "mongodb"
+    container_name: "mongo"
     volumes:
      - data-volume:/data/db
     command: "--smallfiles"
     environment:
      - MONGO_DATA_DIR=/data/db
+
+networks:
+  new:
 
 volumes:
   data-volume:
