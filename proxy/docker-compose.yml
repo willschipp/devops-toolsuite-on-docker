@@ -1,0 +1,13 @@
+version: '2'
+services:
+  proxy:
+    image: nginx-proxy
+    container_name: "proxy"
+    hostname: proxy
+    ports:
+      - 80:80
+
+networks:
+  default:
+     external:
+       name: cd_new
